@@ -1,0 +1,26 @@
+RewriteEngine On
+RewriteBase /
+<IfModule mod_headers.c>
+    <FilesMatch "\.(jpg|jpeg|png|gif|ico|webp)$">
+        Header set Cache-Control "public, max-age=31536000"
+    </FilesMatch>
+</IfModule>
+# Redirect HTTP requests to HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Redirect all requests to index.php except for existing files or directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L]
+
+# RewriteEngine on
+# RewriteCond %{HTTP_HOST} ^saintlucia\.northimmigration\.com$
+# RewriteRule ^/?$ "http\:\/\/https\:\/\/" [R=301,L]
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-SSL} !on
+RewriteCond %{HTTP_HOST} ^saintlucia\.northimmigration\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.saintlucia\.northimmigration\.com$
+RewriteRule ^/?$ "https\:\/\/saintlucia\.northimmigration\.com\/" [R=301,L]
+
+
